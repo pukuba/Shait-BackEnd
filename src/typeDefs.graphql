@@ -12,14 +12,14 @@ type Mutation{
     register(
         email: String!,
         password: String!,
-        age: String!,
+        age: Int!,
         gender: Int!
     ): User!
 
     login(
         email: String!,
         password: String!
-    ): Login!
+    ): String!
 }
 
 type User{
@@ -27,9 +27,4 @@ type User{
     age: Int!
     gender: Int!
     _id: ObjectID!
-}
-
-type Login{
-    token: String!
-    refreshToken: String
 }

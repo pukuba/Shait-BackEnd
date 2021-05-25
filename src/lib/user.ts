@@ -1,6 +1,7 @@
 import { genSaltSync, hashSync, compareSync } from "bcrypt"
 import jwt from "jsonwebtoken"
 import env from "config/env"
+import { User } from "config/types"
 
 export const createHashedPassword = (password: string) => {
     const saltRounds = 10
@@ -24,3 +25,5 @@ export const checkToken = (token: string) => {
         return null
     }
 }
+
+export const createToken = (user: User) => jwt.sign(user, env.JWT_PW)

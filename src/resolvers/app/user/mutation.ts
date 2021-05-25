@@ -1,13 +1,16 @@
 import { Db } from "mongodb"
+import { createHashedPassword, checkPassword, createToken } from "lib"
+import { ApolloError } from "apollo-server-errors"
+
 export const register = async (
     parent: void, {
         email,
-        id,
+        password,
         age,
         gender
     }: {
         email: string,
-        id: string,
+        password: string
         age: number,
         gender: string
     }, {
@@ -16,11 +19,37 @@ export const register = async (
         db: Db
     }
 ) => {
-
+    if (await db.collection("user").findOne({ email }) !== null) {
+        return new ApolloError("email이 중복입니다.")
+    }
+    return await db.collection("user").insertOne({
+        email,
+        password: createHashedPassword(password),
+        age,
+        gender
+    }).then(({ ops }) => ops[0])
 }
 
 export const login = async (
-
+    parent: void, {
+        email,
+        password
+    }: {
+        email: string,
+        password: string
+    }, {
+        db
+    }: {
+        db: Db
+    }
 ) => {
-
+    const user = await db.collection("user").findOne({ email })
+    if (checkPassword(password, user.password) === false) {
+        return new ApolloError("비밀번호가 일치하지 않습니다.")
+    }
+    return createToken({
+        email: user.email,
+        age: user.age,
+        gender: user.gender
+    })
 }

@@ -25,6 +25,6 @@ type Mutation{
 type User{
     email: String!
     age: Int!
-    gender: Int!
+    gender: String!
     _id: ObjectID!
 }

@@ -10,5 +10,10 @@ export interface File {
 export interface User {
     email: string
     age: number
-    gender: number
+    gender: Gender
+}
+
+export enum Gender {
+    Female,
+    Male
 }

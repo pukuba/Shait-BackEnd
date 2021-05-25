@@ -10,10 +10,13 @@ import queryComplexity, { simpleEstimator } from "graphql-query-complexity"
 import depthLimit from "graphql-depth-limit"
 import DB from "config/connectDB"
 
+import { applyMiddleware } from "graphql-middleware"
+import { makeExecutableSchema } from "@graphql-tools/schema"
 import express from "express"
 import expressPlayground from "graphql-playground-middleware-express"
 import { bodyParserGraphQL } from "body-parser-graphql"
 import resolvers from "resolvers"
+import { permissions } from "lib/permissions"
 const typeDefs = readFileSync("src/typeDefs.graphql", "utf-8")
 
 const app = express()
@@ -21,11 +24,15 @@ app.use(bodyParserGraphQL())
 app.use("/voyager", voyagerMiddleware({ endpointUrl: "/api" }))
 app.use("/graphql", expressPlayground({ endpoint: "/api" }))
 app.use("/api-docs", express.static("docs"))
+
+const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers
+})
 const start = async () => {
     const db = await DB.get()
     const server = new ApolloServer({
-        typeDefs,
-        resolvers,
+        schema: applyMiddleware(schema, permissions),
         context: () => {
             return { db }
         },

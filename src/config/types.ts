@@ -6,3 +6,9 @@ export interface File {
     encoding: string
     createReadStream: () => ReadStream
 }
+
+export interface User {
+    email: string
+    age: number
+    gender: number
+}

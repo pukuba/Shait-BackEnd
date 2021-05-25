@@ -1,7 +1,6 @@
 import { uploadStream, isValidImage } from "lib"
 import { File } from "config/types"
 import { Db } from "mongodb"
-import { join } from "path"
 import { ApolloError } from "apollo-server-express"
 
 const path = "file"

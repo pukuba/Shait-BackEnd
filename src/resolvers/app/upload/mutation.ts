@@ -4,7 +4,7 @@ import { Db } from "mongodb"
 import { join } from "path"
 import { ApolloError } from "apollo-server-express"
 
-const path = join(__dirname, "../../../file")
+const path = "file"
 export const imgUpload = async (
     parent: void, {
         file

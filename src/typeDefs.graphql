@@ -1,5 +1,6 @@
 # FileUpload Type
 scalar FileUpload
+scalar ObjectID
 
 type Query{
     test: String!
@@ -7,4 +8,28 @@ type Query{
 
 type Mutation{
     imgUpload(file: FileUpload): Boolean!
+
+    register(
+        email: String!,
+        password: String!,
+        age: String!,
+        gender: Int!
+    ): User!
+
+    login(
+        email: String!,
+        password: String!
+    ): Login!
+}
+
+type User{
+    email: String!
+    age: Int!
+    gender: Int!
+    _id: ObjectID!
+}
+
+type Login{
+    token: String!
+    refreshToken: String
 }

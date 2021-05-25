@@ -50,6 +50,16 @@
                 FileUpload
             </a>
         </li>
+        <li  title="Int">
+            <a href="int.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Int
+            </a>
+        </li>
+        <li  title="ObjectID">
+            <a href="objectid.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ObjectID
+            </a>
+        </li>
         <li  title="String">
             <a href="string.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
                 String
@@ -75,6 +85,11 @@
 <div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
     <h4 class="slds-text-title--caps slds-p-around--medium">Objects</h4>
     <ul>
+        <li  title="User">
+            <a href="user.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                User
+            </a>
+        </li>
         <li  title="__Directive">
             <a href="directive.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
                 __Directive
@@ -153,7 +168,7 @@
             </a>
             GraphQL Schema definition
         </h2>
-        <code class="highlight"><ul class="code" style="padding-left:28px"><li><span class="keyword operator ts">type</span> <span class="identifier">Mutation</span> {</li><li></li><li><span class="tab"><span class="comment line"># Arguments</span></span></li><li><span class="tab"><span class="comment line">#   <strong>file</strong>: </span></span></li><li><span class="tab"><span class="meta">imgUpload</span>(<span class="meta">file</span>: <a class="support type" href="fileupload.doc.html">FileUpload</a>): <a class="support type" href="boolean.doc.html">Boolean</a>! </span></li><li>}</li></ul></code>
+        <code class="highlight"><ul class="code" style="padding-left:42px"><li><span class="keyword operator ts">type</span> <span class="identifier">Mutation</span> {</li><li></li><li><span class="tab"><span class="comment line"># Arguments</span></span></li><li><span class="tab"><span class="comment line">#   <strong>file</strong>: </span></span></li><li><span class="tab"><span class="meta">imgUpload</span>(<span class="meta">file</span>: <a class="support type" href="fileupload.doc.html">FileUpload</a>): <a class="support type" href="boolean.doc.html">Boolean</a>! </span></li><li></li><li><span class="tab"><span class="comment line">#   회원가입 뮤테이션 입니다.</span></span></li><li><span class="tab"><span class="comment line"># </span></span></li><li><span class="tab"><span class="comment line"># Arguments</span></span></li><li><span class="tab"><span class="comment line">#   <strong>email</strong>: 이메일 string</span></span></li><li><span class="tab"><span class="comment line">#   <strong>password</strong>: 비밀번호 string</span></span></li><li><span class="tab"><span class="comment line">#   <strong>age</strong>: 나이 int</span></span></li><li><span class="tab"><span class="comment line">#   <strong>gender</strong>: 성별 0 | 1</span></span></li><li><span class="tab"><span class="meta">register</span>(<span class="meta">email</span>: <a class="support type" href="string.doc.html">String</a>!, <span class="meta">password</span>: <a class="support type" href="string.doc.html">String</a>!, <span class="meta">age</span>: <a class="support type" href="int.doc.html">Int</a>!, <span class="meta">gender</span>: <a class="support type" href="int.doc.html">Int</a>!): <a class="support type" href="user.doc.html">User</a>! </span></li><li></li><li><span class="tab"><span class="comment line">#   로그인 뮤테이션 입니다. JWT 토큰을 반환합니다.</span></span></li><li><span class="tab"><span class="comment line"># </span></span></li><li><span class="tab"><span class="comment line"># Arguments</span></span></li><li><span class="tab"><span class="comment line">#   <strong>email</strong>: 이메일 string</span></span></li><li><span class="tab"><span class="comment line">#   <strong>password</strong>: 비밀번호 string</span></span></li><li><span class="tab"><span class="meta">login</span>(<span class="meta">email</span>: <a class="support type" href="string.doc.html">String</a>!, <span class="meta">password</span>: <a class="support type" href="string.doc.html">String</a>!): <a class="support type" href="string.doc.html">String</a>! </span></li><li>}</li></ul></code>
     </div>
 </section>
 <section>

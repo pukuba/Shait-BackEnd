@@ -9,22 +9,35 @@ type Query{
 type Mutation{
     imgUpload(file: FileUpload): Boolean!
 
+    # 회원가입 뮤테이션 입니다.
     register(
+        # 이메일 string
         email: String!,
+        # 비밀번호 string
         password: String!,
+        # 나이 int
         age: Int!,
+        # 성별 0 | 1
         gender: Int!
     ): User!
 
+    # 로그인 뮤테이션 입니다. JWT 토큰을 반환합니다.
     login(
+        # 이메일 string
         email: String!,
+        # 비밀번호 string
         password: String!
     ): String!
 }
 
+# 유저 타입입니다.
 type User{
+    # 이메일
     email: String!
+    # 나이
     age: Int!
+    # 성별
     gender: String!
+    # 고유 id
     _id: ObjectID!
 }

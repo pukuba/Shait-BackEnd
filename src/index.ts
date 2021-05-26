@@ -56,7 +56,6 @@ const start = async () => {
             })
         ]
     })
-
     server.applyMiddleware({
         app,
         path: "/api"

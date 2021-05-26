@@ -1,7 +1,7 @@
 import assert from "assert"
-import client from "test"
-import { parse } from "lib"
 import DB from "config/connectDB"
+import app from "test"
+import request from "supertest"
 
 describe(`User Services Test`, () => {
     after(async () => {
@@ -11,29 +11,29 @@ describe(`User Services Test`, () => {
     describe("Register Test", () => {
         describe("Success Case", () => {
             it("Register mock user - 1", async () => {
-                const mutation = `
-                    mutation{ 
-                        register(
-                            email:"20sunrin041@sunrint.hs.kr", 
-                            password:"testtest",
-                            age:18,
-                            gender:1,
-                        ){
-                            email,
-                            age,
-                            gender
-                        }
+                const query = `
+                mutation{ 
+                    register(
+                        email:"20sunrin041@sunrint.hs.kr", 
+                        password:"testtest",
+                        age:18,
+                        gender:1,
+                    ){
+                        email,
+                        age,
+                        gender
                     }
-                `
-                const result = await client.mutate({ mutation })
-                const { data } = parse(result)
-                assert.strictEqual(data.register.email, "20sunrin041@sunrint.hs.kr")
-                assert.strictEqual(data.register.age, 18)
-                assert.strictEqual(data.register.gender, "Male")
+                }
+            `
+                await request(app)
+                    .post("/api")
+                    .set("Content-Type", "application/json")
+                    .send(JSON.stringify({ query }))
+                    .expect(200)
             })
 
             it("Register mock user - 2", async () => {
-                const mutation = `
+                const query = `
                     mutation{ 
                         register(
                             email:"namjs1540@naver.com", 
@@ -47,16 +47,16 @@ describe(`User Services Test`, () => {
                         }
                     }
                 `
-                const result = await client.mutate({ mutation })
-                const { data } = parse(result)
-                assert.strictEqual(data.register.email, "namjs1540@naver.com")
-                assert.strictEqual(data.register.age, 17)
-                assert.strictEqual(data.register.gender, "Female")
+                await request(app)
+                    .post("/api")
+                    .set("Content-Type", "application/json")
+                    .send(JSON.stringify({ query }))
+                    .expect(200)
             })
         })
         describe("Failure Case", () => {
             it("Duplicate Email Error", async () => {
-                const mutation = `
+                const query = `
                     mutation{ 
                         register(
                             email:"20sunrin041@sunrint.hs.kr", 
@@ -70,12 +70,15 @@ describe(`User Services Test`, () => {
                         }
                     }
             `
-                const result = await client.mutate({ mutation })
-                const { errors } = parse(result)
-                assert.strictEqual(errors[0].message, "email이 중복입니다.")
+                const { body } = await request(app)
+                    .post("/api")
+                    .set("Content-Type", "application/json")
+                    .send(JSON.stringify({ query }))
+                    .expect(200)
+                assert.strictEqual(body.errors[0].message, "email이 중복입니다.")
             })
             it("Email format error", async () => {
-                const mutation = `
+                const query = `
                     mutation{ 
                         register(
                             email:"kkzk@.kkkz.com", 
@@ -89,16 +92,19 @@ describe(`User Services Test`, () => {
                         }
                     }
             `
-                const result = await client.mutate({ mutation })
-                const { errors } = parse(result)
-                assert.strictEqual(errors[0].message, "올바른 이메일 형식이 아닙니다.")
+                const { body } = await request(app)
+                    .post("/api")
+                    .set("Content-Type", "application/json")
+                    .send(JSON.stringify({ query }))
+                    .expect(200)
+                assert.strictEqual(body.errors[0].message, "올바른 이메일 형식이 아닙니다.")
             })
         })
     })
     describe("Login Test", () => {
         describe("Success Case", () => {
             it("Mock user - 1 Login", async () => {
-                const mutation = `
+                const query = `
                     mutation{
                         login(
                             email:"20sunrin041@sunrint.hs.kr",
@@ -106,13 +112,15 @@ describe(`User Services Test`, () => {
                         )
                     }
                 `
-                const result = await client.mutate({ mutation })
-                const { data } = parse(result)
-                assert(data.login)
+                await request(app)
+                    .post("/api")
+                    .set("Content-Type", "application/json")
+                    .send(JSON.stringify({ query }))
+                    .expect(200)
             })
 
             it("Mock user - 2 Login", async () => {
-                const mutation = `
+                const query = `
                     mutation{
                         login(
                             email:"namjs1540@naver.com",
@@ -120,14 +128,16 @@ describe(`User Services Test`, () => {
                         )
                     }
                 `
-                const result = await client.mutate({ mutation })
-                const { data } = parse(result)
-                assert(data.login)
+                await request(app)
+                    .post("/api")
+                    .set("Content-Type", "application/json")
+                    .send(JSON.stringify({ query }))
+                    .expect(200)
             })
         })
         describe("Failure Case", () => {
             it("can't found account", async () => {
-                const mutation = `
+                const query = `
                     mutation{
                         login(
                             email:"app@app.kr",
@@ -135,12 +145,15 @@ describe(`User Services Test`, () => {
                         )
                     }
                 `
-                const result = await client.mutate({ mutation })
-                const { errors } = parse(result)
-                assert.strictEqual(errors[0].message, "계정이 존재하지 않습니다.")
+                const { body } = await request(app)
+                    .post("/api")
+                    .set("Content-Type", "application/json")
+                    .send(JSON.stringify({ query }))
+                    .expect(200)
+                assert(body.errors[0].message, "계정을 찾을수 없습니다.")
             })
             it("Invalid password", async () => {
-                const mutation = `
+                const query = `
                     mutation{
                         login(
                             email:"20sunrin041@sunrint.hs.kr",
@@ -148,9 +161,12 @@ describe(`User Services Test`, () => {
                         )
                     }
                 `
-                const result = await client.mutate({ mutation })
-                const { errors } = parse(result)
-                assert.strictEqual(errors[0].message, "비밀번호가 일치하지 않습니다.")
+                const { body } = await request(app)
+                    .post("/api")
+                    .set("Content-Type", "application/json")
+                    .send(JSON.stringify({ query }))
+                    .expect(200)
+                assert.strictEqual(body.errors[0].message, "비밀번호가 일치하지 않습니다.")
             })
         })
     })

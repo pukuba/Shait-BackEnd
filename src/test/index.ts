@@ -1,28 +1,42 @@
-import { createTestClient } from "apollo-server-testing"
+import dotenv from "dotenv"
+dotenv.config()
+
 import { ApolloServer } from "apollo-server-express"
 import { readFileSync } from "fs"
-import resolvers from "resolvers"
-import { permissions } from "lib"
+import { createServer } from "http"
+import DB from "config/connectDB"
 import { applyMiddleware } from "graphql-middleware"
 import { makeExecutableSchema } from "@graphql-tools/schema"
-import DB from "config/connectDB"
+import express from "express"
+import { bodyParserGraphQL } from "body-parser-graphql"
+import resolvers from "resolvers"
+import { permissions, checkToken } from "lib"
 const typeDefs = readFileSync("src/typeDefs.graphql", "utf-8")
+
+const app = express()
+app.use(bodyParserGraphQL())
+
 const schema = makeExecutableSchema({
     typeDefs,
     resolvers
 })
-export const serverConfig = {
+
+const server = new ApolloServer({
     schema: applyMiddleware(schema, permissions),
-    context: async () => {
+    context: async ({ req }) => {
+        const token = req.headers.authorization || ''
+        const db = await DB.get()
         return {
-            db: await DB.get()
+            db,
+            user: checkToken(token)
         }
     }
-}
-
-export const testServer = new ApolloServer({
-    ...serverConfig
+})
+server.applyMiddleware({
+    app,
+    path: "/api"
 })
 
-const client = createTestClient(testServer)
-export default client
+const httpServer = createServer(app)
+httpServer.timeout = 5000
+export default app

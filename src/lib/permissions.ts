@@ -10,7 +10,7 @@ const isLogin = rule()((parent: void, args: void, { user }: { user: User | null 
 
 export const permissions = shield({
     Mutation: {
-        login: isLogin,
-        register: isLogin
+        login: not(isLogin),
+        register: not(isLogin)
     }
 })

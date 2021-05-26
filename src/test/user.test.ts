@@ -1,6 +1,5 @@
 import assert from "assert"
 import client from "test"
-import { join } from "path"
 import { parse } from "lib"
 import DB from "config/connectDB"
 
@@ -56,7 +55,7 @@ describe(`User Services Test`, () => {
             })
         })
         describe("Failure Case", () => {
-            it("Register Failure Case - 1", async () => {
+            it("Duplicate Email Error", async () => {
                 const mutation = `
                     mutation{ 
                         register(
@@ -74,6 +73,25 @@ describe(`User Services Test`, () => {
                 const result = await client.mutate({ mutation })
                 const { errors } = parse(result)
                 assert.strictEqual(errors[0].message, "email이 중복입니다.")
+            })
+            it("Email format error", async () => {
+                const mutation = `
+                    mutation{ 
+                        register(
+                            email:"kkzk@.kkkz.com", 
+                            password:"testtest",
+                            age:10,
+                            gender:0,
+                        ){
+                            email,
+                            age,
+                            gender
+                        }
+                    }
+            `
+                const result = await client.mutate({ mutation })
+                const { errors } = parse(result)
+                assert.strictEqual(errors[0].message, "올바른 이메일 형식이 아닙니다.")
             })
         })
     })

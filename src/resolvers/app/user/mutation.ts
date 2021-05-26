@@ -3,6 +3,8 @@ import { createHashedPassword, checkPassword, createToken } from "lib"
 import { ApolloError } from "apollo-server-errors"
 import { Gender, User } from "config/types"
 
+const isValidEmail = (email: string) => /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i.test(email)
+
 export const register = async (
     parent: void, {
         email,
@@ -20,6 +22,9 @@ export const register = async (
         db: Db
     }
 ) => {
+    if (isValidEmail(email) === false) {
+        return new ApolloError("올바른 이메일 형식이 아닙니다.")
+    }
     if (await db.collection("user").findOne({ email }) !== null) {
         return new ApolloError("email이 중복입니다.")
     }

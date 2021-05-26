@@ -2,7 +2,7 @@ import { createTestClient } from "apollo-server-testing"
 import { ApolloServer } from "apollo-server-express"
 import { readFileSync } from "fs"
 import resolvers from "resolvers"
-import { permissions } from "lib/permissions"
+import { permissions } from "lib"
 import { applyMiddleware } from "graphql-middleware"
 import { makeExecutableSchema } from "@graphql-tools/schema"
 import DB from "config/connectDB"
@@ -11,14 +11,16 @@ const schema = makeExecutableSchema({
     typeDefs,
     resolvers
 })
-const serverConfig = {
+export const serverConfig = {
     schema: applyMiddleware(schema, permissions),
     context: async () => {
-        return { db: await DB.get() }
+        return {
+            db: await DB.get()
+        }
     }
 }
 
-const testServer = new ApolloServer({
+export const testServer = new ApolloServer({
     ...serverConfig
 })
 

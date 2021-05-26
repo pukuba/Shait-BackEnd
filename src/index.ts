@@ -16,7 +16,7 @@ import express from "express"
 import expressPlayground from "graphql-playground-middleware-express"
 import { bodyParserGraphQL } from "body-parser-graphql"
 import resolvers from "resolvers"
-import { permissions } from "lib/permissions"
+import { permissions, checkToken } from "lib"
 const typeDefs = readFileSync("src/typeDefs.graphql", "utf-8")
 
 const app = express()
@@ -33,8 +33,12 @@ const start = async () => {
     const db = await DB.get()
     const server = new ApolloServer({
         schema: applyMiddleware(schema, permissions),
-        context: () => {
-            return { db }
+        context: ({ req }) => {
+            const token = req.headers.authorization || ''
+            return {
+                db,
+                user: checkToken(token)
+            }
         },
         validationRules: [
             depthLimit(5),
